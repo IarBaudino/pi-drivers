@@ -1,29 +1,41 @@
-const mapDivers = (drivers) => {
+const mapDrivers = (drivers) => {
     return drivers.map((driver) => {
-        if (driver) {
-            let teams;
-            if (typeof driver.id === "string") {//comprueba que el id sea un string
-                teams = driver.teams?.split(',').map((team) => team.trim()) || []; //si el id es un string, separa los equipos por coma en un array
-            } else {
-                teams = driver.teams || [];
-            }
-            return {
-                id: driver.id,
-                name: driver.name.forename,
-                lastName: driver.name.surname,
-                description: driver.description,
-                image: driver.image.url,
-                teams: teams,
-                nationality: driver.nationality,
-                birthDate: driver.dob,
-                isFromDb: typeof driver.id === 'string'
-            };
+      if (driver) {
+        let teams = [];
+        if (driver.id && typeof driver.id === "string") {
+          // Si el id es un UUID, es un controlador de la base de datos
+          if (driver.Teams && Array.isArray(driver.Teams)) {
+            teams = driver.Teams.map((team) => team.name);
+          }
         } else {
-            return null;
+          // Si el id es un número, es un controlador de la API
+          if (driver.teams) {
+            teams = driver.teams.split(',').map((team) => team.trim());
+          }
+          if (typeof driver.name === 'string') {
+            // Si el nombre es una cadena, no se puede dividir en nombre y apellido
+            driver.name = { forename: driver.name, surname: '' };
+          }
         }
-    }).filter(driver => driver !== null); //elimina todos los elementos nulos de la lista de conductores, de modo que obtenemos una lista limpia de conductores válidos.
-}
-
-module.exports = {
-    mapDivers,
-}
+        const name = driver.name.forename || driver.name;
+        const lastName = driver.name.surname || '';
+        return {
+          id: driver.id,
+          name: name,
+          lastName: lastName,
+          description: driver.description,
+          image: driver.image.url || driver.image,
+          teams: teams,
+          nationality: driver.nationality,
+          birthDate: driver.dob || driver.birthDate,
+          isFromDb: typeof driver.id === 'string',
+        };
+      } else {
+        return null;
+      }
+    }).filter(driver => driver !== null);
+  };
+  
+  module.exports = {
+    mapDrivers
+  };

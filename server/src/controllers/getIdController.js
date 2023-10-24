@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { Driver, Teams } = require("../db.js");
-const { mapDivers } = require("../auxiliares/map");
+const { mapDrivers } = require("../auxiliares/map");
 
 const getId = async (id, source) => {
     let driver;
@@ -12,7 +12,7 @@ const getId = async (id, source) => {
     }
 
     if (driver) {
-        const drivers = mapDivers([driver])
+        const drivers = mapDrivers([driver])
         return drivers[0];
     }else{
         throw new Error(`Driver with ID ${id} not found`);
