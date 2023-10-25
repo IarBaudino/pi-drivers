@@ -7,9 +7,9 @@ const getDriversDb = async () => {
   const driversDb = await Driver.findAll({ 
     include: {
       model: Teams,
-      attributes: ["name"],
+      attributes: ["name", "id"], 
       through: {
-        attributes: [],
+        attributes: [ ],
       }
     }
 });

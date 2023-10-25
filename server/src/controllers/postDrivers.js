@@ -13,6 +13,16 @@ const createDriver = async (name, lastName, description, image, teams, nationali
         birthDate
     })
 
+    teams.forEach(async (teams) => {
+        let teamsDb=await Teams.findAll({
+            where: {
+                name: teams
+            },
+        });
+        await newDriver.addTeams(teamsDb); 
+        
+    });
+
     const team = await Teams.findAll({
         where: {
             name: teams

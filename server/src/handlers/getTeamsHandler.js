@@ -1,11 +1,9 @@
 const {getTeams} = require("../controllers/getTeams");
 
 const getTeamsHandler = async (req, res) => {
-    const {teams}= req.query;
-
     try{
-        const allTeams = await getTeams(teams);
-        res.status(200).json(allTeams);
+        const response = await getTeams();
+        res.status(200).json(response);
     }catch(error){
         res.status(400).json({error: error.message});
     }
