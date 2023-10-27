@@ -16,11 +16,11 @@ const createDriver = async (name, lastName, description, image, teams, nationali
     teams.forEach(async (teams) => {
         let teamsDb=await Teams.findAll({
             where: {
-                name: teams
+                name: [teams]
             },
         });
-        await newDriver.addTeams(teamsDb); 
         
+        await newDriver.addTeams(teamsDb); 
     });
 
     const team = await Teams.findAll({
@@ -31,7 +31,7 @@ const createDriver = async (name, lastName, description, image, teams, nationali
 
     await newDriver.addTeams(team);
 
-    await newDriver.reload({
+    /* await newDriver.reload({
         include: {
             model: Teams,
             attributes: ["name"],
@@ -39,7 +39,7 @@ const createDriver = async (name, lastName, description, image, teams, nationali
                 attributes: []
             }
         }
-    });
+    }); */
     return mapDrivers( newDriver);
 }
 

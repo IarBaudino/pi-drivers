@@ -7,13 +7,15 @@ const getDriversDb = async () => {
   const driversDb = await Driver.findAll({ 
     include: {
       model: Teams,
-      attributes: ["name", "id"], 
+      attributes: ["name"],
       through: {
-        attributes: [ ],
-      }
+        attributes: []
+      } 
+      
     }
-});
-  return mapDrivers(driversDb);
+  });
+  console.log(driversDb)
+  return driversDb;
 };
 
 const getDriversApi = async () => {
@@ -31,8 +33,8 @@ const getDrivers = async (name) => {
       if (driver.name) {
         if (typeof driver.name === 'string') {
           return driver.name.toLowerCase().includes(name.toLowerCase());
-        } else if (driver.name.forename && driver.name.surname) {
-          const fullName = `${driver.name.forename} ${driver.name.surname}`;
+        } else if (driver.name.forename ) {
+          const fullName = `${driver.name.forename} `;
           return fullName.toLowerCase().includes(name.toLowerCase());
         }
       }
