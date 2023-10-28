@@ -1,0 +1,41 @@
+/* En tu archivo home.module.css */
+.container {
+    border: solid blue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 100vh; 
+    overflow: auto;
+  }
+  
+  .buttons {
+    border: solid red;
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    /* Estilos para el contenedor de las tarjetas */
+    .cardsContainer {
+    border: solid yellow;
+    display: flex;  
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px;
+    max-height: 100vh;
+
+       
+  }
+  

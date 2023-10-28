@@ -1,0 +1,58 @@
+/* En tu archivo navBar.module.css */
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #131313;
+    padding: 10px 20px;
+    color: white;
+  }
+  
+  .container a {
+    text-decoration: none;
+    color: white;
+    margin: 0 10px;
+    font-weight: bold;
+  }
+  
+  .container a:hover {
+    text-decoration: underline;
+  }
+  
+  .container input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .container input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .container input[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  
+  .container .logoLink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+  }
+  
+  .container .logo {
+    max-width: 100px;
+  }
+  
+  .container .logoText {
+    margin: 5px 0;
+    font-weight: bold;
+  }
+  

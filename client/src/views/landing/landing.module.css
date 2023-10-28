@@ -1,0 +1,46 @@
+/* styles.module.css */
+body {
+    margin: 0;
+    overflow: hidden; /* Esto ocultará la barra de desplazamiento vertical */
+}
+
+.container {
+    background-image: url('../../assets/landing.png');
+    background-size: 100% 100%; /* Ajusta la imagen para cubrir completamente el contenedor */
+    background-attachment: fixed; /* Mantiene la imagen de fondo fija */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+  }
+  
+  .content {
+    transform: translateY(-80px);
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.863);
+    padding: 30px;
+    border-radius: 40px;
+  }
+  
+  .tituloUno {
+    font-size: 48px;
+    font-weight: bold;
+  }
+  
+  .button {
+    padding: 15px 30px;
+    background-color: #ff0000; /* Color característico de la Fórmula 1 */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 24px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #cc0000; /* Cambio de color al pasar el ratón */
+  }

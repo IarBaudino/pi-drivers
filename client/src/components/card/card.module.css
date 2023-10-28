@@ -1,0 +1,36 @@
+/* En tu archivo card.module.css */
+
+/* En tu archivo card.module.css */
+.card {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    text-align: center;
+    background-color: #fff;
+    margin: 10px;
+    width: 250px;
+  }
+  
+  .image {
+    max-width: 100%;
+    border-radius: 5px;
+  }
+  
+  .name {
+    font-size: 1.5rem;
+    margin: 10px 0;
+  }
+  
+  .surename {
+    font-size: 1rem;
+    color: #333; /* Cambia el color del apellido */
+    margin-top: 5px; /* Añade un margen superior */
+    font-weight: bold; /* Establece el peso de la fuente en negrita */
+  }
+  
+  .teams {
+    font-size: 1rem;
+    color: #666;
+  }
+  

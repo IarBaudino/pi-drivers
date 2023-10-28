@@ -1,12 +1,13 @@
-.App {
+/* .App {
   border: solid #ff0000;
   background-color: #d2d5db;
   text-align: center;
   height: 100vh;
   width: 100vw;
   display: flex;
-  justify-content: center;
   align-items: center;
+  flex-direction: column; ;
  
 }
 
+ */

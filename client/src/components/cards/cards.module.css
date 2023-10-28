@@ -1,0 +1,9 @@
+.containerCards {
+  border: solid orange;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 20px; 
+
+}
