@@ -19,12 +19,12 @@ export function getDrivers() {
     }
 }
 
-export function paginatedDrivers(payload) {
+export function paginatedDrivers(order) {
     return (dispatch) => {
         try {
             dispatch({
                 type: 'PAGINATED_DRIVERS',
-                payload: payload
+                payload: order
             })
         } catch (error) {
             alert(error.response.data.error)

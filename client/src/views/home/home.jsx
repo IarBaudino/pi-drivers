@@ -6,24 +6,36 @@ import Cards from '../../components/cards/Cards';
 
 function Home() {
   const dispatch = useDispatch();
-  const allDrivers = useSelector(state => state.allDrivers);
+  const currentPage = useSelector(state => state.currentPage);
+  const totalPages = useSelector(state => Math.ceil(state.allDrivers.length / 9));
+  const hasPrevPage = currentPage > 1;
+  const hasNextPage = currentPage < totalPages;
 
   useEffect(() => {
     dispatch(getDrivers());
   }, [dispatch]);
 
   const paginated = event => {
-    dispatch(paginatedDrivers(event.target.name));
+    if (event.target.name === 'prev' && hasPrevPage) {
+      dispatch(paginatedDrivers('prev'));
+    } else if (event.target.name === 'next' && hasNextPage) {
+      dispatch(paginatedDrivers('next'));
+    }
     event.preventDefault();
   };
+
+  console.log('currentPage:', currentPage); // Agrega este log para verificar currentPage
+  console.log('totalPages:', totalPages); // Agrega este log para verificar totalPages
+  console.log('hasPrevPage:', hasPrevPage); // Agrega este log para verificar hasPrevPage
+  console.log('hasNextPage:', hasNextPage); // Agrega este log para verificar hasNextPage
 
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
-        <button name="prev" onClick={paginated}>
+        <button name="prev" onClick={paginated} disabled={!hasPrevPage}>
           PREV
         </button>
-        <button name="next" onClick={paginated}>
+        <button name="next" onClick={paginated} disabled={!hasNextPage}>
           NEXT
         </button>
       </div>
@@ -35,5 +47,3 @@ function Home() {
 }
 
 export default Home;
-
-
