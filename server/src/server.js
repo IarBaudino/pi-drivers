@@ -7,7 +7,9 @@ const server = express();
 
 server.use(morgan("dev"));
 server.use(express.json());
-server.use(cors());
+
+// Configura el middleware de CORS para permitir todas las solicitudes (menos seguro en producción)
+server.use(cors({ origin: '*' }));
 
 server.use(router);
 

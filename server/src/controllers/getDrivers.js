@@ -2,6 +2,7 @@ const axios = require("axios");
 const { Driver, Teams } = require("../db.js");
 const {mapDrivers}= require("../auxiliares/map");
 
+const ITEMS_PER_PAGE = 9;
 
 const getDriversDb = async () => {
   const driversDb = await Driver.findAll({ 
