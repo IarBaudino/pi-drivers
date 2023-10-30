@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDrivers, paginatedDrivers } from '../../redux/actions/actions';
-import styles from './home.module.css';
+import styles from '../home/home.module.css';
 import Cards from '../../components/cards/Cards';
 
 function Home() {
@@ -24,10 +24,10 @@ function Home() {
     event.preventDefault();
   };
 
-  console.log('currentPage:', currentPage); // Agrega este log para verificar currentPage
+/*   console.log('currentPage:', currentPage); // Agrega este log para verificar currentPage
   console.log('totalPages:', totalPages); // Agrega este log para verificar totalPages
   console.log('hasPrevPage:', hasPrevPage); // Agrega este log para verificar hasPrevPage
-  console.log('hasNextPage:', hasNextPage); // Agrega este log para verificar hasNextPage
+  console.log('hasNextPage:', hasNextPage); // Agrega este log para verificar hasNextPage */
 
   return (
     <div className={styles.container}>
