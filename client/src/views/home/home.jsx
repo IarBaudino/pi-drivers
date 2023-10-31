@@ -10,37 +10,40 @@ function Home() {
   const totalPages = useSelector(state => Math.ceil(state.allDrivers.length / 9));
   const hasPrevPage = currentPage > 1;
   const hasNextPage = currentPage < totalPages;
+  const allDrivers = useSelector(state => state.allDrivers);
 
   useEffect(() => {
     dispatch(getDrivers());
   }, [dispatch]);
 
-  const paginated = event => {
-    if (event.target.name === 'prev' && hasPrevPage) {
-      dispatch(paginatedDrivers('prev'));
-    } else if (event.target.name === 'next' && hasNextPage) {
-      dispatch(paginatedDrivers('next'));
-    }
+  const paginated = (event, direction) => {
     event.preventDefault();
+    if ((direction === 'prev' && hasPrevPage) || (direction === 'next' && hasNextPage)) {
+      dispatch(paginatedDrivers(direction));
+    }
   };
 
-/*   console.log('currentPage:', currentPage); // Agrega este log para verificar currentPage
-  console.log('totalPages:', totalPages); // Agrega este log para verificar totalPages
-  console.log('hasPrevPage:', hasPrevPage); // Agrega este log para verificar hasPrevPage
-  console.log('hasNextPage:', hasNextPage); // Agrega este log para verificar hasNextPage */
+
+  // Calcular el índice de inicio y final para la página actual
+  const driversPerPage = 9; // Número de conductores por página
+  const startIndex = (currentPage - 1) * driversPerPage;
+  const endIndex = startIndex + driversPerPage;
+
+  // Filtrar los conductores según la página actual
+  const driversToDisplay = allDrivers.slice(startIndex, endIndex);
 
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
-        <button name="prev" onClick={paginated} disabled={!hasPrevPage}>
+        <button name="prev" onClick={(e) => paginated(e, 'prev')} disabled={!hasPrevPage}>
           PREV
         </button>
-        <button name="next" onClick={paginated} disabled={!hasNextPage}>
+        <button name="next" onClick={(e) => paginated(e, 'next')} disabled={!hasNextPage}>
           NEXT
         </button>
       </div>
       <div className={styles.cardsContainer}>
-        <Cards />
+        <Cards drivers={driversToDisplay} />
       </div>
     </div>
   );
