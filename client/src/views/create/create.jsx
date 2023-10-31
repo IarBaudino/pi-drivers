@@ -2,18 +2,12 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTeams, postDrivers } from '../../redux/actions/actions';
+import { validate } from '../../utils/validate';
 import styles from '../create/create.module.css';
 
 const Create = () => {
-
-  const dispatch = useDispatch()
-
-  const allTeams = useSelector(state => state.allTeams)
-  
-  useEffect(() => {
-    dispatch(getTeams())
-  }, [dispatch])
-
+  const dispatch = useDispatch();
+  const allTeams = useSelector(state => state.allTeams);
   const [state, setState] = useState({
     name: '',
     lastName: '',
@@ -22,13 +16,19 @@ const Create = () => {
     nationality: '',
     birthDate: '',
     teams: []
-  })
+  });
 
+  const [errors, setErrors] = useState({});
+
+  // Obtener los equipos cuando se monta el componente
+  useEffect(() => {
+    dispatch(getTeams());
+  }, [dispatch]);
 
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-  
+
     if (name === 'teams') {
       const selectedTeam = value.trim();
       setState((prevState) => ({
@@ -42,51 +42,59 @@ const Create = () => {
       });
     }
   };
-  
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(postDrivers(state))
-  }
+    const fieldErrors = validate(state);
+    setErrors(fieldErrors);
+
+    if (Object.keys(fieldErrors).length === 0) {
+      dispatch(postDrivers(state));
+    }
+  };
 
   return (
     <div className={styles.container}>
-      {console.log(state)}
-      <form className={styles.form} onSubmit={ handleSubmit }>
-
+      <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.label}>NAME</label>
-        <input onChange={handleChange} className={styles.input} type="text" name="name" placeholder="Driver's Name" />
+        <input onChange={handleChange} className={styles.input} type="text" name="name" placeholder="Only letters and spaces" />
+        {errors.name && <p className={styles.error}>{errors.name}</p>}
 
         <label className={styles.label}>LAST NAME</label>
-        <input onChange={handleChange} className={styles.input} type="text" name="lastName" placeholder="Driver's Last Name" />
+        <input onChange={handleChange} className={styles.input} type="text" name="lastName" placeholder="Only letters and spaces" />
+        {errors.lastName && <p className={styles.error}>{errors.lastName}</p>}
 
         <label className={styles.label}>DESCRIPTION</label>
-        <input onChange={handleChange} className={styles.input} type="text" name="description" placeholder="Driver Description" />
+        <input onChange={handleChange} className={styles.input} type="text" name="description" placeholder="2000 characters or less" />
+        {errors.description && <p className={styles.error}>{errors.description}</p>}
 
         <label className={styles.label}>IMAGE</label>
         <input onChange={handleChange} className={styles.input} type="text" name="image" placeholder="Driver's Image URL" />
+        {errors.image && <p className={styles.error}>{errors.image}</p>}
 
         <label className={styles.label}>NATIONALITY</label>
         <input onChange={handleChange} className={styles.input} type="text" name="nationality" placeholder="Driver's Nationality" />
+        {errors.nationality && <p className={styles.error}>{errors.nationality}</p>}
 
         <label className={styles.label}>BIRTH DATE</label>
         <input onChange={handleChange} className={styles.input} type="date" name="birthDate" />
+        {errors.birthDate && <p className={styles.error}>{errors.birthDate}</p>}
 
         <div>
           <label className={styles.label}>TEAMS</label>
-          <select onChange={handleChange} className={styles.select} name="teams" id="teams">
-  {allTeams.map((team, index) => (
-    <option key={index} value={team}>{team}</option>
-  ))}
-  <option value="">Select a Team</option>
-</select>
+          <select onChange={handleChange} className={styles.select} name="teams" id="teams" placeholder='Select a team/s'>
+            {allTeams.map((team, index) => (
+              <option key={index} value={team}>{team}</option>
+            ))}
+            <option value="">Select a team/s</option>
+          </select>
+          {errors.teams && <p className={styles.error}>{errors.teams}</p>}
         </div>
 
         <input type="submit" />
-
       </form>
     </div>
   );
-}
+};
 
 export default Create;
