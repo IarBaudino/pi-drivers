@@ -91,7 +91,7 @@ const Create = () => {
           {errors.teams && <p className={styles.error}>{errors.teams}</p>}
         </div>
 
-        <input type="submit" />
+        <input  type="submit" />
       </form>
     </div>
   );

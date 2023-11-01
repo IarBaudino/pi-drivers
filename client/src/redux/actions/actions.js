@@ -1,9 +1,13 @@
+// actions.js
+
 import axios from 'axios';
 
 export const GET_DRIVERS = 'GET_DRIVERS';
 export const PAGINATED = 'PAGINATED';
 export const GET_TEAMS = 'GET_TEAMS';
-export const UPDATE_TOTAL_PAGES = 'UPDATE_TOTAL_PAGES'; // Nueva acción
+export const UPDATE_TOTAL_PAGES = 'UPDATE_TOTAL_PAGES';
+export const GET_BY_ID = 'GET_BY_ID';
+export const ORDER_DRIVERS = 'ORDER_DRIVERS'; // Nueva acción para ordenar conductores
 
 export function getDrivers() {
   return async function (dispatch) {
@@ -24,13 +28,29 @@ export function getDrivers() {
   };
 }
 
+
+export function getByID(id) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.get(`http://localhost:3001/drivers/${id}`);
+      const driverId = response.data;
+      dispatch({
+        type: GET_BY_ID,
+        payload: driverId,
+      });
+    } catch (error) {
+      alert(error.response.data.error);
+    }
+  }
+}
+
 export function getTeams() {
   return async function (dispatch) {
     try {
       const response = await axios.get('http://localhost:3001/teams');
       const teams = response.data;
       dispatch({
-        type: 'GET_TEAMS',
+        type: GET_TEAMS,
         payload: teams,
       });
     } catch (error) {
@@ -43,8 +63,9 @@ export function postDrivers(state) {
   return async function (dispatch) {
     try {
       await axios.post('http://localhost:3001/drivers', state);
+      alert('Driver created successfully!');
     } catch (error) {
-      alert(error.response.data.error);
+      alert("Error creating driver: " + error.response.data.error);
     }
   }
 }
@@ -66,5 +87,16 @@ export function updateTotalPages(totalPages) {
   return {
     type: UPDATE_TOTAL_PAGES,
     payload: totalPages,
+  };
+}
+
+// Nueva acción para ordenar conductores
+export function orderDrivers(sortBy, sortOrder) {
+  return {
+    type: ORDER_DRIVERS,
+    payload: {
+      sortBy,
+      sortOrder,
+    },
   };
 }

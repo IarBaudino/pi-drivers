@@ -4,13 +4,14 @@ const { mapDrivers } = require("../auxiliares/map");
 
 
 const createDriver = async (name, lastName, description, image, teams, nationality, birthDate) => {
+    const formattedBirthDate = new Date(birthDate).toISOString().split('T')[0];
     const newDriver = await Driver.create({
         name,
         lastName,
         description,
         image,
         nationality,
-        birthDate
+        birthDate: formattedBirthDate
     })
 
     teams.forEach(async (teams) => {
@@ -31,15 +32,7 @@ const createDriver = async (name, lastName, description, image, teams, nationali
 
     await newDriver.addTeams(team);
 
-    /* await newDriver.reload({
-        include: {
-            model: Teams,
-            attributes: ["name"],
-            through: {
-                attributes: []
-            }
-        }
-    }); */
+   
     return mapDrivers( newDriver);
 }
 
