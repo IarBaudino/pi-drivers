@@ -1,5 +1,6 @@
 import {
   GET_DRIVERS,
+  GET_BY_ID,
   PAGINATED,
   GET_TEAMS,
   UPDATE_TOTAL_PAGES, // Nueva acción
@@ -20,6 +21,11 @@ function rootReducer(state = initialState, action) {
         ...state,
         allDrivers: action.payload,
       };
+    case GET_BY_ID:
+      return {
+        ...state,
+        driverId: action.payload,
+      }
     case GET_TEAMS:
       return {
         ...state,

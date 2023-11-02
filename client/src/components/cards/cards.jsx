@@ -9,7 +9,7 @@ const Cards = ({ drivers }) => {
     <div className={styles.containerCards}>
       {drivers.map(driver => (
         <Link to={`/home/${driver.id}`} key={driver.id}>
-          <Card
+           <Card
             image={driver.image}
             name={driver.name}
             lastName={driver.lastName}

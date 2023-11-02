@@ -7,7 +7,6 @@ export const PAGINATED = 'PAGINATED';
 export const GET_TEAMS = 'GET_TEAMS';
 export const UPDATE_TOTAL_PAGES = 'UPDATE_TOTAL_PAGES';
 export const GET_BY_ID = 'GET_BY_ID';
-export const ORDER_DRIVERS = 'ORDER_DRIVERS'; // Nueva acción para ordenar conductores
 
 export function getDrivers() {
   return async function (dispatch) {
@@ -32,8 +31,10 @@ export function getDrivers() {
 export function getByID(id) {
   return async function (dispatch) {
     try {
+      console.log('Paso 3 - Solicitando datos del conductor con ID:', id);
       const response = await axios.get(`http://localhost:3001/drivers/${id}`);
       const driverId = response.data;
+      console.log('Paso 4 - Datos del conductor recibidos:', driverId);
       dispatch({
         type: GET_BY_ID,
         payload: driverId,
@@ -90,13 +91,4 @@ export function updateTotalPages(totalPages) {
   };
 }
 
-// Nueva acción para ordenar conductores
-export function orderDrivers(sortBy, sortOrder) {
-  return {
-    type: ORDER_DRIVERS,
-    payload: {
-      sortBy,
-      sortOrder,
-    },
-  };
-}
+

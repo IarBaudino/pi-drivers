@@ -9,8 +9,11 @@ const Detail = () => {
   const driverId = useSelector(state => state.driverId);
 
   useEffect(() => {
+    console.log('ID del conductor:', id);
     dispatch(getByID(id));
   }, [dispatch, id]);
+
+  console.log('Datos del conductor en Detail:', driverId);
 
   // Verifica si driverId está definido y no es un objeto vacío antes de acceder a sus propiedades
   if (!driverId || Object.keys(driverId).length === 0) {
