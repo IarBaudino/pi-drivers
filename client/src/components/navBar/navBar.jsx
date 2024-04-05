@@ -1,7 +1,19 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import styles from './navBar.module.css'; // Asegúrate de que la ruta sea correcta
 import {Link} from 'react-router-dom'
+import SearchBar from '../searchBar/SearchBar';
+import { restart } from '../../redux/actions/actions';
+
+
 const NavBar = () => {
+
+  const dispatch=useDispatch();
+
+  const reset =()=>{
+    dispatch(restart())
+    console.log("reseteador", reset)
+  }
   return (
     <div className={styles.container}>
       <Link to="/" className={styles.logoLink}>
@@ -9,12 +21,11 @@ const NavBar = () => {
         <p className={styles.logoText}>START</p>
       </Link>
       <div>
-        <Link to="/home">HOME</Link>
+        <Link onClick={reset} to="/home">HOME</Link>
         <Link to="/create">CREATE</Link>
       </div>
       <div>
-        <input type="text" name='' id='' />
-        <input type="submit" />
+        <SearchBar/>
       </div>
     </div>
   );

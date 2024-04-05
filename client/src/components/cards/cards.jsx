@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'; // Importa Link
 import styles from './cards.module.css';
 
 const Cards = ({ drivers }) => {
-  console.log('Conductores a mostrar en Cards:', drivers);
   return (
     <div className={styles.containerCards}>
       {drivers.map(driver => (

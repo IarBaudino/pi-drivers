@@ -3,10 +3,11 @@
 import axios from 'axios';
 
 export const GET_DRIVERS = 'GET_DRIVERS';
-export const PAGINATED = 'PAGINATED';
 export const GET_TEAMS = 'GET_TEAMS';
-export const UPDATE_TOTAL_PAGES = 'UPDATE_TOTAL_PAGES';
 export const GET_BY_ID = 'GET_BY_ID';
+export const GET_DRIVERS_NAME = 'GET_DRIVERS_NAME';
+export const PAGINATION = 'PAGINATION';
+export const RESET =  "RESET";
 
 export function getDrivers() {
   return async function (dispatch) {
@@ -14,17 +15,31 @@ export function getDrivers() {
       const response = await axios.get('http://localhost:3001/drivers');
       const drivers = response.data;
       dispatch({
-        type: 'GET_DRIVERS',
+        type: GET_DRIVERS,
         payload: drivers,
       });
 
-      // Calcula y actualiza totalPages
-      const totalPages = Math.ceil(drivers.length / 9);
-      dispatch(updateTotalPages(totalPages));
     } catch (error) {
       alert(error.response.data.error);
     }
   };
+}
+
+export function driverByName(driver) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.get(`http://localhost:3001/drivers?name=${driver}`);
+
+      dispatch({
+        type: GET_DRIVERS_NAME,
+        payload: response.data,
+
+      });
+    } catch (error) {
+      alert(error.response.data.error);
+    }
+  }
+
 }
 
 
@@ -71,24 +86,28 @@ export function postDrivers(state) {
   }
 }
 
-export function paginatedDrivers(order) {
-  return (dispatch) => {
+export function changePage(order) {
+  return async function (dispatch) {
     try {
       dispatch({
-        type: PAGINATED,
+        type: PAGINATION,
         payload: order,
-      });
+      })
     } catch (error) {
       alert(error.response.data.error);
     }
   }
 }
 
-export function updateTotalPages(totalPages) {
-  return {
-    type: UPDATE_TOTAL_PAGES,
-    payload: totalPages,
-  };
+export function restart() {
+  return async function (dispatch) {
+    try {
+      dispatch({
+        type: RESET,
+      })
+
+    } catch (error) {
+      alert(error.response.data.error)
+    }
+  }
 }
-
-
