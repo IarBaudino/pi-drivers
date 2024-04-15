@@ -24,6 +24,16 @@ const mapDrivers = (drivers) => {
       const name = driver.name.forename || driver.name;
       const lastName = driver.name.surname || driver.lastName;
 
+      let birthDate;
+      if (driver.birthDate) {
+        birthDate = new Date(driver.birthDate).toISOString().slice(0, 10); // Solo la fecha (YYYY-MM-DD)
+      } else if (typeof driver.dob === "string") {
+        birthDate = driver.dob.slice(0, 10); // Solo la fecha (YYYY-MM-DD) suponiendo que dob esté en formato YYYY-MM-DD
+      } else {
+        birthDate = null; // Maneje el caso en el que falte la fecha de nacimiento
+      }
+
+
       return {
         id: driver.id,
         name: name,
@@ -32,7 +42,7 @@ const mapDrivers = (drivers) => {
         image: driver.image.url || driver.image,
         teams: teams,
         nationality: driver.nationality,
-        birthDate: driver.dob || driver.birthDate,
+        birthDate: birthDate,
         isFromDb: isFromDb,
       };
     } else {

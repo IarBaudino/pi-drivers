@@ -3,6 +3,7 @@ const { Driver, Teams } = require("../db.js");
 const { filterDriversByTeam } = require("../auxiliares/teamsFilter");
 const { filterDriversBySource } = require("../auxiliares/sourceFilter");
 const { mapDrivers } = require("../auxiliares/map");
+const {sortByBirthYear} = require("../auxiliares/ordenamientoBDay")
 
 const ITEMS_PER_PAGE = 9;
 
@@ -25,14 +26,12 @@ const getDriversApi = async () => {
   return data;
 };
 
-const getDrivers = async (name,teamName, source ) => {
+const getDrivers = async (name,teamName, source, sortBy, sortOrder) => {
   const driversDb = await getDriversDb();
   const driversApi = await getDriversApi();
   const allDrivers = [...driversDb, ...driversApi];
-  const filteredDriversSource = [];
 
-  
-  if (name) {
+    if (name) {
     const driverFound = allDrivers.filter((driver) => {
       if (driver.name) {
         if (typeof driver.name === "string") {
@@ -59,15 +58,34 @@ const getDrivers = async (name,teamName, source ) => {
     return filterDriversTeam;
   } //esta ok
 
+  
+  if (sortBy && sortOrder) {
+    const mappedDrivers = mapDrivers(allDrivers);
+    const sortedDrivers = mappedDrivers.sort((driver1, driver2) => {
+      let comparisonValue = 0;
+      if (sortBy === "name") {
+        comparisonValue = driver1.name.localeCompare(driver2.name);
+      } else if (sortBy === "birthDate") {
+        const date1 = new Date(driver1.birthDate);
+        const date2 = new Date(driver2.birthDate);
+        comparisonValue = date1 - date2;
+      }
+
+      // Aplicar orden de clasificación
+      return sortOrder === "asc" ? comparisonValue : -comparisonValue;
+    });
+    return sortedDrivers.slice(0, ITEMS_PER_PAGE);
+  }
+  
+
   if (source) {
     const filteredDrivers = filterDriversBySource(allDrivers, source);
     return mapDrivers(filteredDrivers.slice(0, ITEMS_PER_PAGE));
   } else {
-    return mapDrivers(allDrivers.slice(0, ITEMS_PER_PAGE));
-  }
+    return mapDrivers(allDrivers.slice(0, ITEMS_PER_PAGE))
+  } //esta ok 
 
-  
-   return mapDrivers(allDrivers);
+  return mapDrivers(allDrivers.slice(0, ITEMS_PER_PAGE));
 };
 
 module.exports = {
