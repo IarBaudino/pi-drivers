@@ -6,8 +6,7 @@ import { getByID } from '../../redux/actions/actions';
 const Detail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const driverId = useSelector(state => state.driverId);
-
+  const driverId = useSelector(state => state.allDrivers);
   useEffect(() => {
     console.log('ID del conductor:', id);
     dispatch(getByID(id));
@@ -22,6 +21,7 @@ const Detail = () => {
 
   return (
     <div>
+      <div></div>
       <h1>DRIVER DETAIL</h1>
       <p>ID: {driverId.id}</p>
       <p>Nombre: {driverId.name}</p>

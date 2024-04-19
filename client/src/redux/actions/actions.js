@@ -1,13 +1,13 @@
-// actions.js
-
 import axios from 'axios';
 
 export const GET_DRIVERS = 'GET_DRIVERS';
 export const GET_TEAMS = 'GET_TEAMS';
 export const GET_BY_ID = 'GET_BY_ID';
 export const GET_DRIVERS_NAME = 'GET_DRIVERS_NAME';
+export const FILTER_DRIVERS_BY_TEAM = 'FILTER_DRIVERS_BY_TEAM';
 export const PAGINATION = 'PAGINATION';
 export const RESET =  "RESET";
+
 
 export function getDrivers() {
   return async function (dispatch) {
@@ -86,6 +86,21 @@ export function postDrivers(state) {
   }
 }
 
+export function filterDriversByTeam(teamName) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.get(`http://localhost:3001/drivers?teamName="${teamName}"`);
+
+      dispatch({
+        type: FILTER_DRIVERS_BY_TEAM,
+        payload: response.data,
+      });
+    } catch (error) {
+      alert(error.response.data.error);
+    }
+  };
+}
+
 export function changePage(order) {
   return async function (dispatch) {
     try {
@@ -111,3 +126,6 @@ export function restart() {
     }
   }
 }
+
+
+

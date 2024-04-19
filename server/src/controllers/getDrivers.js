@@ -3,9 +3,8 @@ const { Driver, Teams } = require("../db.js");
 const { filterDriversByTeam } = require("../auxiliares/teamsFilter");
 const { filterDriversBySource } = require("../auxiliares/sourceFilter");
 const { mapDrivers } = require("../auxiliares/map");
-const {sortByBirthYear} = require("../auxiliares/ordenamientoBDay")
 
-const ITEMS_PER_PAGE = 9;
+//const ITEMS_PER_PAGE = 9;
 
 const getDriversDb = async () => {
   const driversDb = await Driver.findAll({
@@ -45,7 +44,7 @@ const getDrivers = async (name,teamName, source, sortBy, sortOrder) => {
     });
     
     if (driverFound.length > 0) {
-      return mapDrivers(driverFound.slice(0, ITEMS_PER_PAGE));
+      return mapDrivers(driverFound);
     } else {
       return { error: "No se encontraron conductores con ese nombre" };
     }
@@ -74,18 +73,18 @@ const getDrivers = async (name,teamName, source, sortBy, sortOrder) => {
       // Aplicar orden de clasificación
       return sortOrder === "asc" ? comparisonValue : -comparisonValue;
     });
-    return sortedDrivers.slice(0, ITEMS_PER_PAGE);
+    return sortedDrivers
   }
   
 
   if (source) {
     const filteredDrivers = filterDriversBySource(allDrivers, source);
-    return mapDrivers(filteredDrivers.slice(0, ITEMS_PER_PAGE));
+    return mapDrivers(filteredDrivers);
   } else {
-    return mapDrivers(allDrivers.slice(0, ITEMS_PER_PAGE))
+    return mapDrivers(allDrivers)
   } //esta ok 
 
-  return mapDrivers(allDrivers.slice(0, ITEMS_PER_PAGE));
+  return mapDrivers(allDrivers);
 };
 
 module.exports = {

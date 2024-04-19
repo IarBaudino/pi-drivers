@@ -1,34 +1,29 @@
-import React, { useState } from 'react'
-import {useDispatch} from 'react-redux'
-import {driverByName} from '../../redux/actions/actions'
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { driverByName } from '../../redux/actions/actions';
 
 const SearchBar = () => {
-  const dispatch = useDispatch()
-  const [input, setInput] = useState('')
+  const dispatch = useDispatch();
+  const [input, setInput] = useState('');
 
-  const handleCahange = (event) => {
-    event.preventDefault()
-    setInput(event.target.value)
-    
-  }
+  const handleChange = (event) => {
+    setInput(event.target.value);
+  };
 
   const handleSubmit = (event) => {
-    event.preventDefault()
-    dispatch(driverByName(input))
-   document.getElementById("searchInput").value
-   
-
-    console.log("esto es el submit button",event)
-  }
+    event.preventDefault();
+    dispatch(driverByName(input));
+    setInput(''); // Limpiamos el estado del input después de enviar el formulario
+  };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-      <input onChange={handleCahange} type="text" placeholder="Find a driver" />
-      <input onClick={handleSubmit} type="submit" />
+        <input value={input} onChange={handleChange} type="text" placeholder="Find a driver" />
+        <button type="submit">Search</button> {/* Usamos un botón de tipo submit para enviar el formulario */}
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default SearchBar
+export default SearchBar;

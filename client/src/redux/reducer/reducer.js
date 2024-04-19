@@ -5,16 +5,17 @@ import {
   PAGINATION,
   GET_DRIVERS_NAME,
   RESET,
+  FILTER_DRIVERS_BY_TEAM,
 } from '../actions/actions';
 
 const initialState = {
   allDrivers: [],
   allTeams: [],
   allDriversBackup: [],
-  currentPage: 0,
+  currentPage: 1,
   driversFiltered: [],
+  driversByTeamFiltered: [],
   filters: false,
-
 };
 
 function rootReducer(state = initialState, action) {
@@ -24,71 +25,72 @@ function rootReducer(state = initialState, action) {
     case GET_DRIVERS:
       return {
         ...state,
-        allDrivers: [...action.payload].splice(0, ITEMS_PER_PAGE),
-        allDriversBackup: action.payload
+        allDrivers: action.payload.slice(0, ITEMS_PER_PAGE),
+        allDriversBackup: action.payload,
       };
 
     case GET_BY_ID:
       return {
         ...state,
         allDrivers: action.payload,
-      }
+      };
 
     case GET_TEAMS:
       return {
         ...state,
-        allTeams:action.payload
+        allTeams: action.payload,
       };
 
-      case GET_DRIVERS_NAME:
-        return {
-          ...state,
-          allDrivers: [...action.payload].splice(0, ITEMS_PER_PAGE),
-          driversFiltered: action.payload,
-          filters: true,
-        
-        }
-
-    case PAGINATION:
-      const next_page = state.currentPage + 1;
-      const prev_page = state.currentPage - 1;
-      const fisrtIndex = action.payload === 'next' ? next_page * ITEMS_PER_PAGE : prev_page * ITEMS_PER_PAGE;
-
-      if(state.filters){
-        if(action.payload === 'next' && fisrtIndex > state.driversFiltered.length) return state;
-        if(action.payload === 'prev' && prev_page < 0) return state;
-        return {
-          ...state,
-          allDrivers: [...state.driversFiltered].splice(fisrtIndex, ITEMS_PER_PAGE),
-          currentPage: action.payload === 'next' ? next_page : prev_page
-        }
-      }
-
-      if(action.payload === 'next' && fisrtIndex > state.allDriversBackup.length) return state;
-      if(action.payload === 'prev' && prev_page < 0) return state;
-        
-
-
+    case GET_DRIVERS_NAME:
       return {
         ...state,
-        allDrivers: [...state.allDriversBackup].splice(fisrtIndex, ITEMS_PER_PAGE),
-        currentPage: action.payload === 'next' ? next_page : prev_page
-      }
+        allDrivers: action.payload.slice(0, ITEMS_PER_PAGE),
+        driversFiltered: action.payload,
+        filters: true,
+        currentPage: 1,
+      };
 
-      case RESET:
-        return{
-          ...state,
-          allDrivers:[...state.allDriversBackup].splice(0, ITEMS_PER_PAGE),
-          driversFiltered:[]
+    case FILTER_DRIVERS_BY_TEAM:
+      return {
+        ...state,
+        driversByTeamFiltered: action.payload,
+      };
+
+      case PAGINATION:
+        const nextPage = action.payload === 'next' ? state.currentPage + 1 : state.currentPage - 1;
+  
+        if (nextPage < 1 || (nextPage * ITEMS_PER_PAGE > state.allDriversBackup.length && !state.filters) || (nextPage * ITEMS_PER_PAGE > state.driversFiltered.length && state.filters)) {
+          return state; // No cambiamos nada si estamos fuera de los límites o no hay más datos
         }
-
-      
-
-
-
-    default:
-      return state;
+  
+        const firstIndex = (nextPage - 1) * ITEMS_PER_PAGE;
+        const lastIndex = nextPage * ITEMS_PER_PAGE;
+  
+        let driversToShow;
+        if (state.filters) {
+          driversToShow = state.driversFiltered.slice(firstIndex, lastIndex);
+        } else {
+          driversToShow = state.allDriversBackup.slice(firstIndex, lastIndex);
+        }
+  
+        return {
+          ...state,
+          allDrivers: driversToShow,
+          currentPage: nextPage,
+        };
+  
+        case RESET:
+        return {
+        ...state,
+        allDrivers: state.allDriversBackup, // Restaurar todos los conductores de la copia de seguridad
+        driversFiltered: [], // Restablecer los conductores filtrados
+        currentPage: 1, // Restablecer la página actual a 1
+        filters: false, // Restablecer el estado de filtros
+      };
+  
+      default:
+        return state;
+    }
   }
-}
-
-export default rootReducer;
+  
+  export default rootReducer;

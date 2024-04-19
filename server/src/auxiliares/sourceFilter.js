@@ -1,5 +1,3 @@
-// auxiliar/filterDriversBySource.js
-
 const filterDriversBySource = (drivers, source) => {
     const filteredDrivers = [];
   
