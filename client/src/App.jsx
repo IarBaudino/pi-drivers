@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { useLocation } from 'react-router-dom';
 //Se importan los componentes de las vistas y el navBar que es nuestra barra de navegacion
-import Home from '../src/views/home/Home';
+import Home from '../src/views/home/home';
 import Landing from '../src/views/landing/Landing';
 import Detail from '../src/views/detail/Detail';
 import NavBar from '../src/components/navBar/NavBar';
@@ -18,7 +18,7 @@ const App = () => {
       {pathname !== '/' && <NavBar />}
 
       <Routes>
-        <Route exact path="/home" element={<Home/>} />
+        <Route exact path="/home" element={<Home />} />
         <Route path="/" element={<Landing/>} />
         <Route path="/home/:id" element={<Detail />} />
         <Route path="/create" element={<Create />} />

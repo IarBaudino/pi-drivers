@@ -9,7 +9,7 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const allTeams = useSelector(state => state.allTeams);
   const [selectedTeam, setSelectedTeam] = useState('');
-  const currentPage = useSelector(state=>state.currentPage)
+  //const currentPage = useSelector(state=>state.currentPage)
 
   const handleTeamChange = (event) => {
     setSelectedTeam(event.target.value);
@@ -22,7 +22,7 @@ const NavBar = () => {
 
   const handleReset = () => {
     dispatch(restart()); // Reiniciamos el estado cuando se hace clic en el botón "Home"
-    dispatch(changePage(1));
+    dispatch(changePage("first"));
   };
 
 
@@ -37,7 +37,7 @@ const NavBar = () => {
         <p className={styles.logoText}>START</p>
       </Link>
       <div>
-        <Link to="/home" onClick={handleReset}>HOME</Link>
+        <Link to="/home" onClick={handleReset} >HOME</Link>
         <Link to="/create">CREATE</Link>
       </div>
       <div>

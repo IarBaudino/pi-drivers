@@ -57,40 +57,54 @@ function rootReducer(state = initialState, action) {
       };
 
       case PAGINATION:
-        const nextPage = action.payload === 'next' ? state.currentPage + 1 : state.currentPage - 1;
-  
-        if (nextPage < 1 || (nextPage * ITEMS_PER_PAGE > state.allDriversBackup.length && !state.filters) || (nextPage * ITEMS_PER_PAGE > state.driversFiltered.length && state.filters)) {
-          return state; // No cambiamos nada si estamos fuera de los límites o no hay más datos
+        let newPage;
+      
+        if (action.payload === 'first') {
+          newPage = 1; // Ir a la primera página
+        } else if (action.payload === 'last') {
+          const totalPages = Math.ceil((state.filters ? state.driversFiltered.length : state.allDriversBackup.length) / ITEMS_PER_PAGE);
+          newPage = totalPages; // Ir a la última página
+        } else {
+          if (action.payload === 'next') {
+            newPage = state.currentPage + 1; // Siguiente página
+          } else if (action.payload === 'prev') {
+            newPage = state.currentPage - 1; // Página anterior
+          }
+      
+          if (newPage < 1 || (newPage * ITEMS_PER_PAGE > state.allDriversBackup.length && !state.filters) || (newPage * ITEMS_PER_PAGE > state.driversFiltered.length && state.filters)) {
+            return state; // No cambiamos nada si estamos fuera de los límites o no hay más datos
+          }
         }
-  
-        const firstIndex = (nextPage - 1) * ITEMS_PER_PAGE;
-        const lastIndex = nextPage * ITEMS_PER_PAGE;
-  
+      
+        const firstIndex = (newPage - 1) * ITEMS_PER_PAGE;
+        const lastIndex = newPage * ITEMS_PER_PAGE;
+      
         let driversToShow;
         if (state.filters) {
           driversToShow = state.driversFiltered.slice(firstIndex, lastIndex);
         } else {
           driversToShow = state.allDriversBackup.slice(firstIndex, lastIndex);
         }
-  
+      
         return {
           ...state,
           allDrivers: driversToShow,
-          currentPage: nextPage,
+          currentPage: newPage,
         };
-  
-        case RESET:
-        return {
+
+
+    case RESET:
+      return {
         ...state,
         allDrivers: state.allDriversBackup, // Restaurar todos los conductores de la copia de seguridad
         driversFiltered: [], // Restablecer los conductores filtrados
-        currentPage: 1, // Restablecer la página actual a 1
+        currentPage: 1,  // Restablecer la página actual a 1
         filters: false, // Restablecer el estado de filtros
       };
-  
-      default:
-        return state;
-    }
+
+    default:
+      return state;
   }
-  
-  export default rootReducer;
+}
+
+export default rootReducer;
