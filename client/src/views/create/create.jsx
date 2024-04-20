@@ -53,6 +53,19 @@ const Create = () => {
     }
   };
 
+  const handleResetForm = () => {
+    setState({
+      name: '',
+      lastName: '',
+      description: '',
+      image: '',
+      nationality: '',
+      birthDate: '',
+      teams: []
+    });
+    setErrors({});
+  };
+
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -90,8 +103,18 @@ const Create = () => {
           </select>
           {errors.teams && <p className={styles.error}>{errors.teams}</p>}
         </div>
-
+        {/* Mostrar equipos seleccionados */}
+        <div>
+          <label className={styles.label}>Selected Teams:</label>
+          <div>
+            {state.teams.map((team, index) => (
+              <p key={index}>{team}</p>
+            ))}
+          </div>
+        </div>
         <input  type="submit" />
+        {/* Botón para limpiar el formulario */}
+        <button type="button" onClick={handleResetForm}>Reset Form</button>
       </form>
     </div>
   );
