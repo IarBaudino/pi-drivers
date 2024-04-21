@@ -70,32 +70,32 @@ const Create = () => {
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.label}>NAME</label>
-        <input onChange={handleChange} className={styles.input} type="text" name="name" placeholder="Only letters and spaces" />
+        <input onChange={handleChange} value={state.name}  className={styles.input} type="text" name="name" placeholder="Only letters and spaces" />
         {errors.name && <p className={styles.error}>{errors.name}</p>}
 
         <label className={styles.label}>LAST NAME</label>
-        <input onChange={handleChange} className={styles.input} type="text" name="lastName" placeholder="Only letters and spaces" />
+        <input onChange={handleChange} value={state.lastName}  className={styles.input} type="text" name="lastName" placeholder="Only letters and spaces" />
         {errors.lastName && <p className={styles.error}>{errors.lastName}</p>}
 
         <label className={styles.label}>DESCRIPTION</label>
-        <input onChange={handleChange} className={styles.input} type="text" name="description" placeholder="2000 characters or less" />
+        <input onChange={handleChange} value={state.description}  className={styles.input} type="text" name="description" placeholder="2000 characters or less" />
         {errors.description && <p className={styles.error}>{errors.description}</p>}
 
         <label className={styles.label}>IMAGE</label>
-        <input onChange={handleChange} className={styles.input} type="text" name="image" placeholder="Driver's Image URL" />
+        <input onChange={handleChange} value={state.image}  className={styles.input} type="text" name="image" placeholder="Driver's Image URL" />
         {errors.image && <p className={styles.error}>{errors.image}</p>}
 
         <label className={styles.label}>NATIONALITY</label>
-        <input onChange={handleChange} className={styles.input} type="text" name="nationality" placeholder="Driver's Nationality" />
+        <input onChange={handleChange} value={state.nationality}  className={styles.input} type="text" name="nationality" placeholder="Driver's Nationality" />
         {errors.nationality && <p className={styles.error}>{errors.nationality}</p>}
 
         <label className={styles.label}>BIRTH DATE</label>
-        <input onChange={handleChange} className={styles.input} type="date" name="birthDate" />
+        <input onChange={handleChange}value={state.birthDate} className={styles.input} type="date" name="birthDate" />
         {errors.birthDate && <p className={styles.error}>{errors.birthDate}</p>}
 
         <div>
           <label className={styles.label}>TEAMS</label>
-          <select onChange={handleChange} className={styles.select} name="teams" id="teams" placeholder='Select a team/s'>
+          <select onChange={handleChange} value={state.teams}  className={styles.select} name="teams" id="teams" placeholder='Select a team/s'>
             {allTeams.map((team, index) => (
               <option key={index} value={team}>{team}</option>
             ))}
@@ -112,7 +112,7 @@ const Create = () => {
             ))}
           </div>
         </div>
-        <input  type="submit" />
+        <input  type="submit"  />
         {/* Botón para limpiar el formulario */}
         <button type="button" onClick={handleResetForm}>Reset Form</button>
       </form>
