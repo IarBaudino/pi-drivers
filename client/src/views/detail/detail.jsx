@@ -27,10 +27,10 @@ const Detail = () => {
       <p>Nombre: {driverId.name}</p>
       <p>Apellido: {driverId.lastName}</p>
       <p>Nacionalidad: {driverId.nationality}</p>
-      <img src={driverId.image} alt={`Imagen de ${driverId.name} ${driverId.lastName}`} />
       <p>Descripción: {driverId.description}</p>
       <p>Fecha de Nacimiento: {driverId.birthDate}</p>
-      <p>Escuderías: {driverId.teams.join(', ')}</p>
+      <p>Escuderías: {driverId.teams ? driverId.teams.join(', ') : ''}</p>
+      <img src={driverId.image} alt={`Imagen de ${driverId.name} ${driverId.lastName}`} />
     </div>
   );
 };
