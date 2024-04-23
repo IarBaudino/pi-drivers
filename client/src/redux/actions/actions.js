@@ -7,6 +7,7 @@ export const GET_DRIVERS_NAME = 'GET_DRIVERS_NAME';
 export const FILTER_DRIVERS_BY_TEAM = 'FILTER_DRIVERS_BY_TEAM';
 export const PAGINATION = 'PAGINATION';
 export const RESET =  "RESET";
+export const FILTER_DRIVERS_BY_SOURCE = 'FILTER_DRIVERS_BY_SOURCE';
 
 
 export function getDrivers() {
@@ -89,11 +90,12 @@ export function postDrivers(state) {
 export function filterDriversByTeam(teamName) {
   return async function (dispatch) {
     try {
-      const response = await axios.get(`http://localhost:3001/drivers?teamName="${teamName}"`);
-
+      console.log("Filtering drivers by team:", teamName);
+      const response = await axios.get(`http://localhost:3001/drivers?teamName=${teamName}`);
+      const driversTeams = response.data;
       dispatch({
         type: FILTER_DRIVERS_BY_TEAM,
-        payload: response.data,
+        payload: driversTeams
       });
     } catch (error) {
       alert(error.response.data.error);
@@ -101,6 +103,21 @@ export function filterDriversByTeam(teamName) {
   };
 }
 
+export function filterDriversBySource(source) {
+  return async function (dispatch) {
+    try {
+      console.log("Filtering drivers by source:", source);
+      const response = await axios.get(`http://localhost:3001/drivers?source=${source}`);
+      const driversBySource = response.data;
+      dispatch({
+        type: FILTER_DRIVERS_BY_SOURCE,
+        payload: driversBySource
+      });
+    } catch (error) {
+      alert(error.response.data.error);
+    }
+  };
+}
 export function changePage(order) {
   return async function (dispatch) {
     try {

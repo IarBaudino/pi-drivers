@@ -3,26 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './navBar.module.css';
 import { Link } from 'react-router-dom';
 import SearchBar from '../searchBar/searchBar';
-import { restart, getTeams, filterDriversByTeam, changePage } from '../../redux/actions/actions';
+import { restart, getTeams, changePage } from '../../redux/actions/actions';
 
 const NavBar = () => {
   const dispatch = useDispatch();
-  const allTeams = useSelector(state => state.allTeams);
-  const [selectedTeam, setSelectedTeam] = useState('');
+ // const allTeams = useSelector(state => state.allTeams);
   //const currentPage = useSelector(state=>state.currentPage)
 
-  const handleTeamChange = (event) => {
-    setSelectedTeam(event.target.value);
-    if (event.target.value) {
-      dispatch(filterDriversByTeam(event.target.value));
-    } else {
-      dispatch(restart()); // Reiniciamos el estado cuando se selecciona "Todos los equipos"
-    }
-  };
+  
 
   const handleReset = () => {
     dispatch(restart()); // Reiniciamos el estado cuando se hace clic en el botón "Home"
-    dispatch(changePage("first"));
+    dispatch(changePage("first"))
+    
   };
 
 
@@ -43,15 +36,7 @@ const NavBar = () => {
       <div>
         <SearchBar />
       </div>
-      <div>
-        <label className={styles.label}>TEAMS</label>
-        <select onChange={handleTeamChange} className={styles.select} value={selectedTeam}>
-          <option value="">All Teams</option>
-          {allTeams.map((team, index) => (
-            <option key={index} value={team}>{team}</option>
-          ))}
-        </select>
-      </div>
+      
     </div>
   );
 };
