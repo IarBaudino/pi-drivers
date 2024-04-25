@@ -13,6 +13,7 @@ const Cards = ({ drivers }) => {
             name={driver.name}
             lastName={driver.lastName}
             teams={driver.teams}
+            birthDate={driver.birthDate}
           />
         </Link>
       ))}

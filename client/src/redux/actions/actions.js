@@ -8,6 +8,8 @@ export const FILTER_DRIVERS_BY_TEAM = 'FILTER_DRIVERS_BY_TEAM';
 export const PAGINATION = 'PAGINATION';
 export const RESET =  "RESET";
 export const FILTER_DRIVERS_BY_SOURCE = 'FILTER_DRIVERS_BY_SOURCE';
+export const SORT_DRIVERS_BY_NAME = 'SORT_DRIVERS_BY_NAME';
+export const SORT_DRIVERS_BY_BIRTHDATE = 'SORT_DRIVERS_BY_BIRTHDATE';
 
 
 export function getDrivers() {
@@ -106,15 +108,44 @@ export function filterDriversByTeam(teamName) {
 export function filterDriversBySource(source) {
   return async function (dispatch) {
     try {
-      console.log("Filtering drivers by source:", source);
       const response = await axios.get(`http://localhost:3001/drivers?source=${source}`);
-      const driversBySource = response.data;
+      const driversBySource = response.data; // Aquí asignamos la respuesta a driversBySource
       dispatch({
         type: FILTER_DRIVERS_BY_SOURCE,
         payload: driversBySource
       });
     } catch (error) {
-      alert(error.response.data.error);
+      alert('Error fetching drivers by source: ' + error.message);
+    }
+  };
+}
+
+export function sortDriversByName(order, selectedTeam, selectedSource) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.get(`http://localhost:3001/drivers?sortBy=name&sortOrder=${order}&teamName=${selectedTeam}&source=${selectedSource}`);
+      const sortedDrivers = response.data;
+      dispatch({
+        type: SORT_DRIVERS_BY_NAME,
+        payload: sortedDrivers
+      });
+    } catch (error) {
+      alert('Error sorting drivers by name: ' + error.message);
+    }
+  };
+}
+
+export function sortDriversByBirthdate(order, selectedTeam, selectedSource) {
+  return async function (dispatch) {
+    try {
+      const response = await axios.get(`http://localhost:3001/drivers?sortBy=birthDate&sortOrder=${order}&teamName=${selectedTeam}&source=${selectedSource}`);
+      const sortedDrivers = response.data;
+      dispatch({
+        type: SORT_DRIVERS_BY_BIRTHDATE,
+        payload: sortedDrivers
+      });
+    } catch (error) {
+      alert('Error sorting drivers by birthdate: ' + error.message);
     }
   };
 }

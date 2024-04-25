@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changePage, getDrivers, getTeams, restart, filterDriversByTeam, filterDriversBySource } from '../../redux/actions/actions';
+import { changePage, getDrivers, getTeams, restart, filterDriversByTeam, filterDriversBySource, sortDriversByName, sortDriversByBirthdate } from '../../redux/actions/actions'; // Asegúrate de importar las funciones de clasificación
 import styles from '../home/home.module.css';
 import Cards from "../../components/cards/cards";
 
@@ -10,7 +10,9 @@ function Home() {
   const currentPage = useSelector(state => state.currentPage);
   const allTeams = useSelector(state => state.allTeams);
   const [selectedTeam, setSelectedTeam] = useState('');
-  const [selectedSource, setSelectedSource] = useState(''); // Nuevo estado para el origen seleccionado
+  const [selectedSource, setSelectedSource] = useState('');
+  const [filters, setFilters] = useState({ team: '', source: '' });
+  const [sorting, setSorting] = useState({ sortBy: '', sortOrder: '' });
 
   useEffect(() => {
     if (!allDrivers.length) {
@@ -27,28 +29,50 @@ function Home() {
     const selectedTeamName = event.target.value;
     const formattedTeamName = selectedTeamName.charAt(0).toUpperCase() + selectedTeamName.slice(1).toLowerCase();
     setSelectedTeam(formattedTeamName);
-    
+    setFilters({ ...filters, team: formattedTeamName });
+
     if (selectedTeamName) {
       dispatch(filterDriversByTeam(formattedTeamName));
     } else {
-      dispatch(restart())
+      dispatch(restart());
     }
   };
 
-  const handleSourceChange = (event) => { // Nuevo manejador de eventos para el cambio de origen
+  const handleSourceChange = (event) => {
     const selectedSource = event.target.value;
     setSelectedSource(selectedSource);
-    
+    setFilters({ ...filters, source: selectedSource });
+
     if (selectedSource) {
       dispatch(filterDriversBySource(selectedSource));
     } else {
-      dispatch(restart())
+      dispatch(restart());
     }
   };
 
-  const pagination=(event)=>{
-    dispatch(changePage(event.target.name))
-  }
+  const handleSortByName = () => {
+    const newSortingOrder = sorting.sortOrder === 'asc' ? 'desc' : 'asc';
+    setSorting({ sortBy: 'name', sortOrder: newSortingOrder });
+    dispatch(sortDriversByName(newSortingOrder, selectedTeam, selectedSource));
+  };
+
+  const handleSortByBirthdate = () => {
+    const newSortingOrder = sorting.sortOrder === 'asc' ? 'desc' : 'asc';
+    setSorting({ sortBy: 'birthdate', sortOrder: newSortingOrder });
+    dispatch(sortDriversByBirthdate(newSortingOrder, selectedTeam, selectedSource));
+  };
+
+  const pagination = (event) => {
+    dispatch(changePage(event.target.name));
+  };
+
+  const resetFilters = () => {
+    dispatch(restart());
+    setSelectedTeam('');
+    setSelectedSource('');
+    setFilters({ team: '', source: '' });
+    setSorting({ sortBy: '', sortOrder: '' });
+  };
 
   return (
     <div className={styles.container}>
@@ -71,12 +95,23 @@ function Home() {
         </select>
       </div>
       <div>
-        <label className={styles.label}>Source</label> {/* Nuevo filtro por origen */}
+        <label className={styles.label}>Source</label>
         <select onChange={handleSourceChange} className={styles.select} value={selectedSource}>
           <option value="">All Sources</option>
           <option value="db">Database</option>
           <option value="api">API</option>
         </select>
+      </div>
+      <div>
+        <button onClick={handleSortByName}>Sort A-Z</button>
+        <button onClick={handleSortByName}>Sort Z-A</button>
+      </div>
+      <div>
+        <button onClick={handleSortByBirthdate}>Sort by BirthDate</button>
+        <span>{sorting.sortOrder === 'asc' ? '↑' : '↓'}</span>
+      </div>
+      <div>
+        <button onClick={resetFilters}>Reset Filters</button>
       </div>
       <div className={styles.cardsContainer}>
         <Cards drivers={allDrivers} />

@@ -3,8 +3,7 @@ const { Driver, Teams } = require("../db.js");
 const { filterDriversByTeam } = require("../auxiliares/teamsFilter");
 const { filterDriversBySource } = require("../auxiliares/sourceFilter");
 const { mapDrivers } = require("../auxiliares/map");
-
-//const ITEMS_PER_PAGE = 9;
+const { sortDrivers } = require("../auxiliares/order");
 
 const getDriversDb = async () => {
   const driversDb = await Driver.findAll({
@@ -16,7 +15,6 @@ const getDriversDb = async () => {
       },
     },
   });
-  //console.log(driversDb)
   return driversDb;
 };
 
@@ -25,13 +23,19 @@ const getDriversApi = async () => {
   return data;
 };
 
-const getDrivers = async (name,teamName, source, sortBy, sortOrder) => {
+const getDrivers = async (name, teamName, source, sortBy, sortOrder) => {
+  let allDrivers = [];
+  
+  // Obtener conductores de la base de datos y la API
   const driversDb = await getDriversDb();
   const driversApi = await getDriversApi();
-  const allDrivers = [...driversDb, ...driversApi];
-
-    if (name) {
-    const driverFound = allDrivers.filter((driver) => {
+  
+  // Combinar conductores de la base de datos y la API
+  allDrivers = [...driversDb, ...driversApi];
+  
+  // Filtrar conductores por nombre si se proporciona el parámetro
+  if (name) {
+    let filteredDrivers = allDrivers.filter((driver) => {
       if (driver.name) {
         if (typeof driver.name === "string") {
           return driver.name.toLowerCase().includes(name.toLowerCase());
@@ -42,48 +46,36 @@ const getDrivers = async (name,teamName, source, sortBy, sortOrder) => {
       }
       return false;
     });
-    
-    if (driverFound.length > 0) {
-      return mapDrivers(driverFound);
+  
+    // Ordenar los conductores filtrados por nombre
+    filteredDrivers = sortDrivers(filteredDrivers, sortBy, sortOrder);
+  
+    if (filteredDrivers.length > 0) {
+      return mapDrivers(filteredDrivers);
     } else {
       return { error: "No se encontraron conductores con ese nombre" };
     }
-  } //esta ok
-  
+  }
+
+  // Filtrar conductores por equipo si se proporciona el parámetro
   if (teamName) {
     const mappedDrivers = mapDrivers(allDrivers);
-        
     const filterDriversTeam = filterDriversByTeam(mappedDrivers, teamName);
-    return filterDriversTeam;
-  } //esta ok
-
-  
-  if (sortBy && sortOrder) {
-    const mappedDrivers = mapDrivers(allDrivers);
-    const sortedDrivers = mappedDrivers.sort((driver1, driver2) => {
-      let comparisonValue = 0;
-      if (sortBy === "name") {
-        comparisonValue = driver1.name.localeCompare(driver2.name);
-      } else if (sortBy === "birthDate") {
-        const date1 = new Date(driver1.birthDate);
-        const date2 = new Date(driver2.birthDate);
-        comparisonValue = date1 - date2;
-      }
-
-      // Aplicar orden de clasificación
-      return sortOrder === "asc" ? comparisonValue : -comparisonValue;
-    });
-    return sortedDrivers
+    allDrivers = filterDriversTeam;
   }
-  
 
+  // Filtrar conductores por fuente si se proporciona el parámetro
   if (source) {
     const filteredDrivers = filterDriversBySource(allDrivers, source);
-    return mapDrivers(filteredDrivers);
-  } else {
-    return mapDrivers(allDrivers)
-  } //esta ok 
+    allDrivers = filteredDrivers;
+  }
+  
+  // Ordenar conductores si se proporcionan los parámetros de ordenamiento
+  if (sortBy && sortOrder) {
+    allDrivers = sortDrivers(allDrivers, sortBy, sortOrder);
+  }
 
+  // Mapear y devolver conductores
   return mapDrivers(allDrivers);
 };
 

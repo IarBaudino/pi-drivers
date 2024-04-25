@@ -7,7 +7,8 @@ import {
   RESET,
   FILTER_DRIVERS_BY_TEAM,
   FILTER_DRIVERS_BY_SOURCE,
-  filterDriversBySource,
+  SORT_DRIVERS_BY_NAME,
+  SORT_DRIVERS_BY_BIRTHDATE,
 } from '../actions/actions';
 
 const initialState = {
@@ -18,6 +19,8 @@ const initialState = {
   driversFiltered: [],
   driversByTeamFiltered: [],
   driversBySourceFiltered: [],
+  driversByNameSorted: [], // Conductores ordenados por nombre
+  driversByBirthdateSorted: [], // Conductores ordenados por fecha de nacimiento
   filters: {
     name: '', // Nombre del conductor buscado
     team: '',
@@ -85,7 +88,7 @@ function rootReducer(state = initialState, action) {
         return {
           ...state,
           allDrivers: action.payload.slice(0, ITEMS_PER_PAGE),
-          driversBySourceFiltered: driversBySource,
+          driversBySourceFiltered: action.payload,
           filters: {
             ...state.filters,
             source: action.payload,
@@ -93,16 +96,33 @@ function rootReducer(state = initialState, action) {
           currentPage: 1,
         };
 
-        case PAGINATION:
+        case SORT_DRIVERS_BY_NAME:
+          return {
+            ...state,
+            allDrivers: action.payload.slice(0, ITEMS_PER_PAGE),
+            driversByNameSorted: action.payload,
+            currentPage: 1,
+          };
+
+        case SORT_DRIVERS_BY_BIRTHDATE:
+          return {
+            ...state, 
+            allDrivers: action.payload.slice(0, ITEMS_PER_PAGE),
+            driversByBirthdateSorted: action.payload,
+            currentPage: 1,
+          };
+
+          case PAGINATION:
             let newPage;
+            
             if (action.payload === 'first') {         
               newPage = 1; // Ir a la primera página
-            } else if (action.payload === 'last') {         
+            } else if (action.payload === 'last') { 
               const totalDrivers =  
               (state.filters ? state.driversFiltered.length : state.allDriversBackup.length) +
               (state.filters ? state.driversByTeamFiltered.length : 0)+
-              (state.filters ? state.driversBySourceFiltered.length : 0);
-
+              (state.filters ? state.driversBySourceFiltered.length : 0)+
+              (state.driversByNameSorted.length || state.driversByBirthdateSorted.length );
               const totalPages = Math.ceil(totalDrivers / ITEMS_PER_PAGE);
               newPage = totalPages; // Ir a la última página
 
@@ -115,7 +135,8 @@ function rootReducer(state = initialState, action) {
             
               const totalDrivers = (state.filters ? state.driversFiltered.length : state.allDriversBackup.length) +
                                    (state.filters ? state.driversByTeamFiltered.length : 0) +
-                                   (state.filters ? state.driversBySourceFiltered.length : 0);
+                                   (state.filters ? state.driversBySourceFiltered.length : 0)+
+                                   (state.driversByNameSorted.length || state.driversByBirthdateSorted.length); 
             if (newPage < 1 || newPage > Math.ceil(totalDrivers / ITEMS_PER_PAGE)) {          
             return state; // No cambiamos nada si estamos fuera de los límites o no hay más datos
               }
@@ -126,24 +147,29 @@ function rootReducer(state = initialState, action) {
           
             let driversToShow;
             if (state.filters) {
-            if (state.driversFiltered.length > 0) {
-            driversToShow = state.driversFiltered.slice(firstIndex, lastIndex);
-            } else if (state.driversByTeamFiltered.length > 0) {
-            driversToShow = state.driversByTeamFiltered.slice(firstIndex, lastIndex);
-            } else if (state.driversBySourceFiltered.length > 0) { // Verificar si hay conductores filtrados por origen
-              driversToShow = state.driversBySourceFiltered.slice(firstIndex, lastIndex); // Utilizar los conductores filtrados por origen
+              if (state.driversFiltered.length > 0) {
+                driversToShow = state.driversFiltered.slice(firstIndex, lastIndex);
+              } else if (state.driversByTeamFiltered.length > 0) {
+                driversToShow = state.driversByTeamFiltered.slice(firstIndex, lastIndex);
+              } else if (state.driversBySourceFiltered.length > 0) {
+                driversToShow = state.driversBySourceFiltered.slice(firstIndex, lastIndex);
+              } else if (state.driversByNameSorted.length > 0) { // Verificar si hay datos ordenados por nombre
+                driversToShow = state.driversByNameSorted.slice(firstIndex, lastIndex); // Utilizar los datos ordenados por nombre
+              } else if (state.driversByBirthdateSorted.length > 0) { // Verificar si hay datos ordenados por fecha de nacimiento
+                driversToShow = state.driversByBirthdateSorted.slice(firstIndex, lastIndex); // Utilizar los datos ordenados por fecha de nacimiento
+              } else {
+                driversToShow = [];
+              }
             } else {
-              driversToShow = [];
+              driversToShow = state.allDriversBackup.slice(firstIndex, lastIndex);
             }
-        } else {
-          driversToShow = state.allDriversBackup.slice(firstIndex, lastIndex);
-          }
 
               return {          
               ...state,
               allDrivers: driversToShow,
               currentPage: newPage,
               };
+        
         
 
 
